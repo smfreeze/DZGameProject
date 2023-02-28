@@ -156,7 +156,7 @@ MonoBehaviour:
   moveSpeed: 4
   groundDrag: 5
   jumpForce: 5
-  jumpCooldown: 0.2
+  jumpCooldown: 1
   airMultiplier: 0
   givenCamera: {fileID: 0}
   defaultFOV: 60
