@@ -1,5 +1,8 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
@@ -18,10 +21,12 @@ public class GunScript : MonoBehaviour
     public Transform attackPoint;
     public RaycastHit rayHit;
     public LayerMask whatIsEnemy;
+    public Transform gunModel;
 
     //Graphics
     public GameObject muzzleFlash, bulletHoleGraphic;
     public TextMeshProUGUI text;
+    public GameObject muzzleFlashReal;
 
     private void Awake()
     {
@@ -47,9 +52,14 @@ public class GunScript : MonoBehaviour
         {
             bulletsShot = bulletsPerTap;
             Shoot();
+            muzzleFlashReal.SetActive(true);
+        }
+        else
+        {
+            muzzleFlashReal.SetActive(false);
         }
     }
-    private void Shoot()
+    private async void Shoot()
     {
         readyToShoot = false;
 
@@ -64,16 +74,17 @@ public class GunScript : MonoBehaviour
         if (Physics.Raycast(fpsCam.transform.position, direction, out rayHit, range, whatIsEnemy))
         {
             Debug.Log(rayHit.collider.name);
-
             //if (rayHit.collider.CompareTag("Enemy"))
-                //rayHit.collider.GetComponent<ShootingAi>().TakeDamage(damage);
+            //rayHit.collider.GetComponent<ShootingAi>().TakeDamage(damage);
         }
 
         //ShakeCamera
 
         //Graphics
         Instantiate(bulletHoleGraphic, rayHit.point, Quaternion.Euler(0, 180, 0));
-        Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+        //Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
+
+
 
         bulletsLeft--;
         bulletsShot--;
@@ -83,18 +94,28 @@ public class GunScript : MonoBehaviour
         if (bulletsShot > 0 && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
+
     private void ResetShot()
     {
         readyToShoot = true;
     }
+
     private void Reload()
     {
         reloading = true;
+        Vector3 movement = new Vector3(0f, -100f, -100f);
+        gunModel.Translate(movement * Time.deltaTime);
         Invoke("ReloadFinished", reloadTime);
     }
+
     private void ReloadFinished()
     {
         bulletsLeft = magazineSize;
         reloading = false;
+        float x = 0f;
+        float y = -0.28f;
+        float z = -0.15f;
+        Vector3 moveback = new Vector3(0, 100, 100);
+        gunModel.Translate(moveback * 1 * Time.deltaTime);
     }
 }
