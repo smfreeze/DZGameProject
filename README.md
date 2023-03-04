@@ -1,3 +1,3 @@
 # DZGameProject
  
-game
+shooter game
